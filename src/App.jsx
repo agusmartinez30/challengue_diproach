@@ -1,101 +1,65 @@
 
-import { useState } from 'react'
-import './App.css'
+import { useEffect, useState } from 'react'
+import Categoria from './components/categoria/Categoria'
+import SubCategoria from './components/sub_categoria/SubCategoria'
+import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
+import ListCategories from './components/list_categories/ListCategories'
 
 
 function App() {
 
-  const [nombreCategoria, setNombreCategoria] = useState('')
-  const [nombreCategoriaHijo, setNombreCategoriaHijo] = useState('')
+  const [addCategories, setAddCategories] = useState([
+   {
+    id: 0,
+    title: 'Bebidas',
+    subcategories: [
+      {
+        id: 1,
+        title: "Gaseosa"
+      }
+    ]
+   },
 
-  const [categoriaPadre, setCategoriaPadre] = useState([
-    {
-      id: 1,
-      name: "Muebles",
-      subcategories: []
-    }
   ])
 
-  const [categoriaHijo, setCategoriaHijo] = useState([
-    {
-      id: 1,
-      name: "Muebles de cocina",
-      padre: '',
-      subcategories: []
-    }
-  ])
+  useEffect(() => {
 
-  const handleCategoriaPadre = (e) => {
-    const nombreCategoria = e.target.value
-    setNombreCategoria(nombreCategoria)
-
-    // return nuevaCategoriaPadre = { id: Date.now(), name: nombreCategoria, subcategories: [] }
-  }
-
-  const handleSubmitCategoriaPadre = (e) => {
-    e.preventDefault()
-    const nuevaCategoriaPadre = { id: Date.now(), name: nombreCategoria, subcategories: [] }
-    setCategoriaPadre(nuevaCategoriaPadre)
-    setNombreCategoria('')
-    alert('Categoria creada correctamente')
-
-  }
-
-  // categiras hijo
-  const handleNameCatHijo = (e) => {
-    const nombreCategoriaHijo = e.target.value
-    setNombreCategoriaHijo(nombreCategoriaHijo)
-  }
-
-  const handleSubmitHijo = (e) => {
-    e.preventDefault()
-    const nuevaCategoriaHijo = { id: Date.now(), name: nombreCategoria, padre: '' , subcategories: [] }
-    setCategoriaHijo(nuevaCategoriaHijo)
-  }
-
-
+  }, [addCategories])
 
   return (
     <>
-      <h1>Categorias</h1>
-      <form onSubmit={handleSubmitCategoriaPadre}>
-        <label htmlFor="">Nombre de categoria</label>
-        <input type="text" name='categoria_padre' placeholder='EX. Muebles' onChange={handleCategoriaPadre} />
-        <button>Guardar</button>
-      </form>
-      <hr />
-      <form onSubmit={handleSubmitHijo}>
-        <div>
-          {/* <label htmlFor=""></label>
-          <input type="text" placeholder='EX. Muebles' /> */}
-          <label htmlFor="">categoria padre</label>
-          <select name="" id="">
+      <Container maxW={"full"}  padding={0} bgColor={'#222831'}>
+        <Box maxW={'1024px'} width={'100%'} margin={'0 auto'} minH={"100vh"} padding={3}>
+          <Text fontSize={"2xl"} color={'#D6D5A8'}>Challenge Diproach</Text>
+          <Box display={{base:'column', md:'flex'}} justifyContent={'space-between'}>
+            <Box width={'100%'} display={'flex'} flexDir={'column'} gap={6} padding={6} >
 
-            {
-              categoriaPadre.map((padre, idx) => (
-                <option key={idx} value="">{padre.name}</option>
-              ))
-            }
-          </select>
-        </div>
-        <div>
-          <label htmlFor="">Nombre de categoria hijo</label>
-          <input type="text" placeholder='EX. Muebles para el comedor' onChange={handleNameCatHijo} />
-        </div>
+              <hr />
 
-
-        <button>Guardar</button>
-      </form>
-      <hr />
-      <section style={{ display: "flex", width: "100%", justifyContent: "space-around" }}>
-        {
-          categoriaPadre.map((categoria, idx) => (
-            <div key={idx}>
-              <h3>{categoria.name}</h3>
-            </div>
-          ))
-        }
-      </section>
+              <Tabs variant='soft-rounded' colorScheme='green'>
+                <TabList>
+                  <Tab>Crear categoría</Tab>
+                  <Tab>Crear subcategoría</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
+                    <Categoria setAddCategories={setAddCategories} addCategories={addCategories} />
+                  </TabPanel>
+                  <TabPanel>
+                    <SubCategoria setAddCategories={setAddCategories} addCategories={addCategories} />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </Box>
+            <Box width={'100%'} >
+              <ListCategories addCategories={addCategories} />
+              {
+                addCategories.length <= 0 && <Text color={'#fff'} textAlign={'center'} >No existe ninguna categoria</Text>
+              }
+            </Box>
+          </Box>
+        </Box>
+      </Container>
     </>
   )
 }
