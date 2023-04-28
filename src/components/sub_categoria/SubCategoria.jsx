@@ -1,6 +1,4 @@
 /* eslint-disable react/prop-types */
-
-import { Box, Button, FormLabel, Input, Select, Text } from "@chakra-ui/react"
 import { useState } from "react"
 
 
@@ -8,30 +6,31 @@ function SubCategoria({ addCategories, setAddCategories }) {
 
 
   const [subCategoria, setSubCategoria] = useState({
-    id: 0,
+    id: Date.now(),
     title: '',
-    subcategories: []
   })
   const [id, setId] = useState(0)
 
   const handleCategoryName = (e) => {
 
+    const nameValue = e.target.value
+
     setSubCategoria({
       ...subCategoria,
-      [e.target.name]: e.target.value
+      [e.target.name]: nameValue.toLowerCase()
     })
   }
 
   const handleGuardarCategoria = (e) => {
     e.preventDefault();
+
     if(subCategoria.title == ""){
-      alert('ingrese un nombre')
-      return
+      return alert('ingrese un nombre')
     }
     // eslint-disable-next-line react/prop-types
     setAddCategories([...addCategories],
       addCategories.filter((category) => category.id == id).map((item) => (
-        item.subcategories.push(subCategoria)
+        item.subcategories = [...item.subcategories, subCategoria]
       ))
     )
 
